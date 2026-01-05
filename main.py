@@ -1,12 +1,16 @@
 import logging
-import time
+import signal
 
-from api.client import HEYEClient
 from api.server import HEYEServer
 from config import LOGGING_LEVEL, SERVER_ADDR
-from core.events import MsgEvent
-from core.threads import Thread, Threads
+from plugins.test import TestPlugin
+from service.gui import MainUI
+from service.heye import Service
 
+signal.signal(signal.SIGINT, signal.SIG_DFL)  # что бы qt киллялось от ctrl+c
+
+
+# настройка логгера
 logging.basicConfig(
     level=LOGGING_LEVEL,
     format="%(asctime)s [%(name)s : %(funcName)s] %(levelname)s - %(message)s",
@@ -15,24 +19,18 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 logger.setLevel(LOGGING_LEVEL)
 
+# создание сервера и UI
 server = HEYEServer()
 server.bind(SERVER_ADDR)
 
+ui = MainUI()
 
-def run():
-    server.listen()
+service = Service(server=server, ui=ui)
 
+plugins = [TestPlugin()]
 
-@MsgEvent.on
-def on_msg(msg: MsgEvent):
-    print(msg.data)
-    return {1: 2}
-
-
-Threads.INSTANCE.post(Thread(target=run))
-
-client = HEYEClient()
-
-while True:
-    time.sleep(5)
-    print(client.send({"a": 123}))
+# запуск
+if __name__ == "__main__":
+    service.config()
+    service.add_plugins(plugins)
+    service.main()
