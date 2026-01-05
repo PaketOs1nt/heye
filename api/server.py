@@ -36,6 +36,10 @@ class HEYEServer:
                         EventBus.INSTANCE.post(
                             MsgEvent(sock=self.sock, data=data, addr=addr)
                         )
+
+            except ConnectionAbortedError:
+                pass
+
             except TimeoutError:
                 pass
 

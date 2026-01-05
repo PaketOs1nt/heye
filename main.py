@@ -7,6 +7,11 @@ from config import LOGGING_LEVEL, SERVER_ADDR
 from core.events import MsgEvent
 from core.threads import Thread, Threads
 
+logging.basicConfig(
+    level=LOGGING_LEVEL,
+    format="%(asctime)s [%(name)s : %(funcName)s] %(levelname)s - %(message)s",
+)
+
 logger = logging.getLogger(__name__)
 logger.setLevel(LOGGING_LEVEL)
 
@@ -20,7 +25,7 @@ def run():
 
 @MsgEvent.on
 def on_msg(msg: MsgEvent):
-    print(msg)
+    print(msg.data)
     return {1: 2}
 
 
