@@ -1,7 +1,7 @@
 import json
 import logging
 import socket
-from typing import Set, Tuple
+from typing import Tuple
 
 from config import SERVER_LOGGING_LEVEL, SERVER_TIMEOUT, SERVER_WAIT_MSG_TIMEOUT
 from core.eventbus import EventBus
@@ -15,7 +15,6 @@ logger.setLevel(SERVER_LOGGING_LEVEL)
 class HEYEServer:
     def __init__(self) -> None:
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.waits: Set[socket._RetAddress] = set()
         self.timeout = Timeout(self.sock)
 
         self.sock.settimeout(SERVER_TIMEOUT)

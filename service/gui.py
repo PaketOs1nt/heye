@@ -1,20 +1,27 @@
 import sys
+from typing import List
 
 import keyboard
-from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtCore import QSize, Qt, QTimer
 from PyQt6.QtGui import QColor, QPalette
 from PyQt6.QtWidgets import (
     QApplication,
     QHBoxLayout,
-    QLabel,
     QMainWindow,
-    QPushButton,
     QSizePolicy,
     QVBoxLayout,
     QWidget,
 )
 
 from config import GUI_TITLE_NAME, GUI_TOGGLE_HOTKEY
+
+
+class Mod:
+    def __init__(self) -> None:
+        pass
+
+    def apply(self, main: "MainUI"):
+        pass
 
 
 class PluginUI(QWidget):
@@ -61,15 +68,22 @@ class MainUI(QMainWindow):
         )
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
+        self.plugins: List[PluginUI] = []
+
     def toggle_menu(self):
-        self.setHidden(not self.isHidden())
+        for p in self.plugins:
+            p.setHidden(not p.isHidden())
 
     def config(self):
-        keyboard.add_hotkey(GUI_TOGGLE_HOTKEY, callback=self.toggle_menu)
+        keyboard.add_hotkey(
+            GUI_TOGGLE_HOTKEY, callback=lambda: QTimer.singleShot(0, self.toggle_menu)
+        )
         self.create_widgets()
 
     def create_widgets(self):
         self.rlayout = QHBoxLayout()
+
+        self.rlayout.setContentsMargins(10, 10, 10, 10)
 
         context = QWidget()
         context.setContentsMargins(0, 0, 0, 0)
@@ -79,6 +93,7 @@ class MainUI(QMainWindow):
 
     def add_plugin(self, p: PluginUI):
         p.set_ui()
+        self.plugins.append(p)
         self.rlayout.addWidget(p, stretch=0, alignment=Qt.AlignmentFlag.AlignTop)
 
     def main(self):

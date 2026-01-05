@@ -1,7 +1,8 @@
 from typing import Sequence
 
 from api.server import HEYEServer
-from service.gui import MainUI, PluginUI
+from core.threads import Thread, Threads
+from service.gui import MainUI, Mod, PluginUI
 
 
 class Service:
@@ -19,5 +20,10 @@ class Service:
         for plugin in plugins:
             self.ui.add_plugin(plugin)
 
+    def apply_mods(self, mods: Sequence[Mod]):
+        for mod in mods:
+            mod.apply(self.ui)
+
     def main(self):
+        Threads.INSTANCE.post(Thread(target=self.server.listen, name="HEYE Server"))
         self.ui.main()
