@@ -18,6 +18,7 @@ class BaseEvent:
         from core.eventbus import EventBus
 
         EventBus.INSTANCE.subscribe(cls, f)
+        return f
 
     def end(self, result: Any):
         pass
@@ -32,5 +33,4 @@ class MsgEvent(BaseEvent):
     def end(self, result: Any):
         raw = json.dumps(result).encode()
         self.sock.sendto(len(raw).to_bytes(4, byteorder="big"), self.addr)
-        self.sock.sendto(raw, self.addr)
         self.sock.sendto(raw, self.addr)

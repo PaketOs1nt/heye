@@ -1,6 +1,6 @@
 import logging
 
-LOGGING_LEVEL = logging.DEBUG
+LOGGING_LEVEL = logging.NOTSET
 
 SERVER_ADDR = ("localhost", 14867)
 SERVER_TIMEOUT = 2
