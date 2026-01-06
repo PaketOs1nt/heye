@@ -1,8 +1,8 @@
 import sys
-from typing import List
+from typing import Any, List
 
 import keyboard
-from PyQt6.QtCore import QSize, Qt, QTimer
+from PyQt6.QtCore import QMetaObject, QObject, QSize, Qt, QTimer, pyqtSlot
 from PyQt6.QtGui import QColor, QPalette
 from PyQt6.QtWidgets import (
     QApplication,
@@ -14,6 +14,22 @@ from PyQt6.QtWidgets import (
 )
 
 from config import GUI_TITLE_NAME, GUI_TOGGLE_HOTKEY
+
+
+class GuiExecutor(QObject):
+    INSTANCE: "GuiExecutor"
+    EXECUTOR: Any = None
+    ARGS = []
+
+    @pyqtSlot()
+    def _trigger(self):
+        if GuiExecutor.EXECUTOR:
+            GuiExecutor.EXECUTOR(*GuiExecutor.ARGS)
+
+    def trigger(self):
+        QMetaObject.invokeMethod(
+            GuiExecutor.INSTANCE, "_trigger", Qt.ConnectionType.QueuedConnection
+        )
 
 
 class Mod:
@@ -46,6 +62,8 @@ class MainUI(QMainWindow):
     def __init__(self) -> None:
         self.app = QApplication(sys.argv)
         self.app.setStyle("Fusion")
+
+        GuiExecutor.INSTANCE = GuiExecutor()
 
         self.screen_size = QSize(0, 0)
 

@@ -4,6 +4,7 @@ import signal
 from api.server import HEYEServer
 from config import LOGGING_LEVEL, SERVER_ADDR
 from mods.notify import NotifyMod
+from plugins.settings import SettingsPlugin
 from plugins.test import TestPlugin
 from service.gui import MainUI
 from service.heye import Service
@@ -28,7 +29,7 @@ server.bind(SERVER_ADDR)
 service = Service(server=server, ui=ui)
 
 # плагины и моды
-plugins = [TestPlugin()]
+plugins = [TestPlugin(), SettingsPlugin()]
 mods = [NotifyMod()]
 
 # запуск
