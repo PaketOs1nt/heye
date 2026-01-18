@@ -7,6 +7,7 @@ from PyQt6.QtGui import QColor, QPalette
 from PyQt6.QtWidgets import (
     QApplication,
     QHBoxLayout,
+    QLabel,
     QMainWindow,
     QSizePolicy,
     QVBoxLayout,
@@ -41,9 +42,11 @@ class Mod:
 
 
 class PluginUI(QWidget):
-    def __init__(self) -> None:
+    def __init__(self, name: str) -> None:
         super().__init__()
         self.rlayout = QVBoxLayout()
+
+        self.rlayout.addWidget(QLabel(name), alignment=Qt.AlignmentFlag.AlignCenter)
 
         palette = self.palette()
         palette.setColor(QPalette.ColorRole.Window, QColor())

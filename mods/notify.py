@@ -2,7 +2,7 @@ import logging
 
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QColor, QPalette
-from PyQt6.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QLabel, QVBoxLayout, QWidget
 
 from config import NOTIFY_LOGGING_LEVEL
 from core.events import MsgEvent
@@ -40,7 +40,7 @@ class NotifyWindow(QWidget):
 
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
 
-        QTimer.singleShot(timeout, self.close)
+        QTimer.singleShot(timeout, self.destroy)
 
         self.adjustSize()
 
@@ -57,12 +57,13 @@ class NotifyWindow(QWidget):
 
 
 class Notify:
-    def __init__(self, text: str, timeout: int):
+    def __init__(self, text: str, timeout: int, app: QWidget):
         self.text = text
         self.timeout = timeout
+        self.app = app
 
     def run(self):
-        GuiExecutor.ARGS = [self.text, self.timeout, QApplication.activeWindow()]
+        GuiExecutor.ARGS = [self.text, self.timeout, self.app]
         GuiExecutor.EXECUTOR = NotifyWindow
         GuiExecutor.INSTANCE.trigger()
 
@@ -79,8 +80,7 @@ class NotifyMod(Mod):
                 logger.info("recved notify '%s' : %s", msg, time)
 
                 if self.can:
-                    notify = Notify(text=msg, timeout=time)
-                    notify.run()
+                    Notify(text=msg, timeout=time, app=self.main).run()
 
             e.canceled = True
 

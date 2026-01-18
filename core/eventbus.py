@@ -17,7 +17,11 @@ class EventBus:
 
     def subscribe(self, event: Event, func: Listener):
         self.listeners.setdefault(event, []).append(func)
-        logger.debug("%s connected to %s", func.__qualname__, event.__qualname__)
+        logger.debug(
+            "%s connected to %s",
+            func.__module__ + "." + func.__qualname__,
+            event.__qualname__,
+        )
 
     def post(self, event: BaseEvent):
         for f in self.listeners.get(type(event), []):
@@ -30,7 +34,7 @@ class EventBus:
                 logger.exception(
                     "%s called by %s, event: %s",
                     e,
-                    f.__qualname__,
+                    f.__module__ + "." + f.__qualname__,
                     event.__class__.__qualname__,
                 )
                 event.on_error(e)

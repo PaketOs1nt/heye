@@ -7,7 +7,7 @@ from service.gui import PluginUI
 
 class SettingsPlugin(PluginUI):
     def __init__(self) -> None:
-        super().__init__()
+        super().__init__("Settings")
         self.client = HEYEClient()
 
     def test_notify(self):
@@ -20,7 +20,7 @@ class SettingsPlugin(PluginUI):
         btn_test_notify = QPushButton("Test Notify")
         btn_test_notify.pressed.connect(self.test_notify)
 
-        notify_status = QCheckBox("Notify")
+        notify_status = QCheckBox("Can notify")
         notify_status.setCheckState(Qt.CheckState.Checked)
         notify_status.stateChanged.connect(self.send_status)
 

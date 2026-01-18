@@ -5,7 +5,7 @@ from service.gui import PluginUI
 
 class TestPlugin(PluginUI):
     def __init__(self) -> None:
-        super().__init__()
+        super().__init__("Test")
 
     def set_ui(self):
         self.label = QLabel("0")

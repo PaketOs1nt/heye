@@ -6,6 +6,7 @@ from config import LOGGING_LEVEL, SERVER_ADDR
 from mods.notify import NotifyMod
 from plugins.settings import SettingsPlugin
 from plugins.test import TestPlugin
+from plugins.veyondetect import VeyonDetector
 from service.gui import MainUI
 from service.heye import Service
 
@@ -15,7 +16,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)  # что бы qt киллялос�
 # настройка логгера
 logging.basicConfig(
     level=LOGGING_LEVEL,
-    format="%(asctime)s [%(name)s : %(funcName)s] %(levelname)s - %(message)s",
+    format="%(asctime)s [%(name)s:%(funcName)s] %(levelname)s - %(message)s",
 )
 
 logger = logging.getLogger(__name__)
@@ -29,7 +30,7 @@ server.bind(SERVER_ADDR)
 service = Service(server=server, ui=ui)
 
 # плагины и моды
-plugins = [TestPlugin(), SettingsPlugin()]
+plugins = [TestPlugin(), SettingsPlugin(), VeyonDetector()]
 mods = [NotifyMod()]
 
 # запуск
